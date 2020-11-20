@@ -8,12 +8,25 @@ CREATE TABLE IF NOT EXISTS category (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS director (
+    id varchar(128) NOT NULL,
+    user_id varchar(128) NOT NULL,
+    display_name varchar(128) NOT NULL,
+    picture varchar(2048) DEFAULT NULL,
+    create_time timestamptz NOT NULL DEFAULT now(),
+    update_time timestamptz NOT NULL DEFAULT now(),
+    active boolean DEFAULT TRUE,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS movie (
     id varchar(128) NOT NULL,
     user_id varchar(128) NOT NULL,
     category_id varchar(128) DEFAULT NULL,
     display_name varchar(256) NOT NULL,
     description varchar(512) DEFAULT NULL,
+    director_id varchar(256) DEFAULT NULL,
+    year interval DEFAULT date_part('year', CURRENT_DATE),
     picture varchar(2048) DEFAULT NULL,
     watch_url varchar(2048) DEFAULT NULL,
 
@@ -21,6 +34,7 @@ CREATE TABLE IF NOT EXISTS movie (
     update_time timestamptz NOT NULL DEFAULT now(),
     active boolean DEFAULT TRUE,
     crawl_url varchar(2048) DEFAULT NULL,
+    CONSTRAINT fk_director FOREIGN KEY (director_id) REFERENCES director(id) ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
 
