@@ -8,4 +8,5 @@ type CreateCommand struct {
 	DisplayName string
 	Description string
 	UserId      string
+	CategoryId  string
 }

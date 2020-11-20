@@ -23,8 +23,8 @@ func NewIdentifier(field, value string) (*Identifier, error) {
 
 func (i Identifier) ensureValidNanoId(field, value string) error {
 	//	rules
-	//	a.	16 <= value.length >= 128
-	if len(value) < 16 || len(value) > 128 {
+	//	a.	16 (if value) <= value.length >= 128
+	if (len(value) >= 1 && len(value) < 16) || len(value) > 128 {
 		return ddderr.NewInvalidFormat(field, "nano id")
 	}
 

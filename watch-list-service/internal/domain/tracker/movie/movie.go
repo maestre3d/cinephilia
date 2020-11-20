@@ -9,20 +9,29 @@ import (
 //	@Entity
 type Movie struct {
 	id          Id
+	user        UserId
+	categoryId  CategoryId
 	displayName DisplayName
 	description Description
-	user        UserId
+
+	picture  Picture
+	watchUrl WatchUrl
+	crawlUrl CrawlUrl
 
 	// extend aggregate root
 	events []domain.Event
 }
 
-func NewMovie(id Id, name DisplayName, description Description, userId UserId) *Movie {
+func NewMovie(id Id, name DisplayName, description Description, userId UserId, categoryId CategoryId) *Movie {
 	mov := &Movie{
 		id:          id,
+		user:        userId,
+		categoryId:  categoryId,
 		displayName: name,
 		description: description,
-		user:        userId,
+		picture:     Picture{},
+		watchUrl:    WatchUrl{},
+		crawlUrl:    CrawlUrl{},
 		events:      make([]domain.Event, 0),
 	}
 	mov.record(NewMovieCreated(id.Value(), name.Value(), description.Value()))
@@ -48,7 +57,15 @@ func (m Movie) Id() Id {
 	return m.id
 }
 
-func (m Movie) Name() DisplayName {
+func (m Movie) User() UserId {
+	return m.user
+}
+
+func (m Movie) Category() CategoryId {
+	return m.categoryId
+}
+
+func (m Movie) DisplayName() DisplayName {
 	return m.displayName
 }
 
@@ -56,6 +73,14 @@ func (m Movie) Description() Description {
 	return m.description
 }
 
-func (m Movie) User() UserId {
-	return m.user
+func (m Movie) Picture() Picture {
+	return m.picture
+}
+
+func (m Movie) WatchUrl() WatchUrl {
+	return m.watchUrl
+}
+
+func (m Movie) CrawlUrl() CrawlUrl {
+	return m.crawlUrl
 }

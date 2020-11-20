@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	movieapp "github.com/maestre3d/cinephilia/watch-list-service/internal/application/tracker/movie"
@@ -18,24 +19,35 @@ func main() {
 
 	movieId, _ := gonanoid.ID(16)
 	userId, _ := gonanoid.ID(16)
+	categoryId, _ := gonanoid.ID(16)
 
 	err := movieHandler.Invoke(ctx, movieapp.CreateCommand{
 		Id:          movieId,
 		DisplayName: "There will be blood",
-		Description: "",
+		Description: "Directed by Paul Thomas Anderson. Lead actor: Daniel Day Lewis.",
+		CategoryId:  categoryId,
 		UserId:      userId,
 	})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
 
-	err = movieHandler.Invoke(ctx, movieapp.CreateCommand{
-		Id:          movieId,
-		DisplayName: "Thurman Show",
-		Description: "",
-		UserId:      userId,
-	})
+	queryHandler := movieapp.NewFindQueryHandler(movieapp.NewFinder(movieRepo))
+	mov, err := queryHandler.Invoke(ctx, movieapp.FindQuery{Id: movieId})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
+
+	movieJSON, _ := json.Marshal(mov)
+	log.Print(string(movieJSON))
+	/*
+		err = movieHandler.Invoke(ctx, movieapp.CreateCommand{
+			Id:          movieId,
+			DisplayName: "Thurman Show",
+			Description: "",
+			UserId:      userId,
+		})
+		if err != nil {
+			log.Fatal(ddderr.GetDescription(err))
+		}*/
 }

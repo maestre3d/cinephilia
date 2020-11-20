@@ -33,6 +33,10 @@ func (h CreateCommandHandler) Invoke(ctx context.Context, command CreateCommand)
 	if err != nil {
 		return err
 	}
+	categoryId, err := movie.NewCategoryId(command.CategoryId)
+	if err != nil {
+		return err
+	}
 
-	return h.creator.Create(ctx, *id, *displayName, *description, *userId)
+	return h.creator.Create(ctx, *id, *displayName, *description, *userId, *categoryId)
 }

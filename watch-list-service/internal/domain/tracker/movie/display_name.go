@@ -13,6 +13,7 @@ func NewDisplayName(value string) (*DisplayName, error) {
 	} else if err := name.ensureMaxLength(value); err != nil {
 		return nil, err
 	}
+	name.value = value
 
 	return name, nil
 }

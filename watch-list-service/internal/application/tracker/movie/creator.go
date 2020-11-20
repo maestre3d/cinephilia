@@ -17,10 +17,10 @@ func NewCreator(repository movie.Repository) *Creator {
 }
 
 func (c Creator) Create(ctx context.Context, id movie.Id, name movie.DisplayName, description movie.Description,
-	userId movie.UserId) error {
+	userId movie.UserId, categoryId movie.CategoryId) error {
 	if mov, _ := NewFinder(c.repository).Find(ctx, id); mov != nil {
 		return movie.AlreadyExists
 	}
 
-	return c.repository.Save(ctx, *movie.NewMovie(id, name, description, userId))
+	return c.repository.Save(ctx, *movie.NewMovie(id, name, description, userId, categoryId))
 }
