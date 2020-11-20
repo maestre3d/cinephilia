@@ -34,6 +34,10 @@ func (i InMemoryMovieRepository) Search(_ context.Context, movieId movie.Id) (*m
 	return i.db[movieId.Value()], nil
 }
 
-func (i InMemoryMovieRepository) SearchByCriteria(_ context.Context, criteria domain.Criteria) ([]*movie.Movie, error) {
-	panic("implement me")
+func (i InMemoryMovieRepository) SearchByCriteria(_ context.Context, criteria domain.Criteria) (
+	[]*movie.Movie, error) {
+	i.mu.RLock()
+	defer i.mu.RUnlock()
+
+	return nil, nil
 }

@@ -1,5 +1,7 @@
 package domain
 
+import "fmt"
+
 // OrderBy criteria ordering field
 //	@ValueObject
 type OrderBy string
@@ -24,4 +26,12 @@ func (o Order) By() OrderBy {
 
 func (o Order) Type() OrderType {
 	return o.orderType
+}
+
+func (o Order) HasOrder() bool {
+	return !o.orderType.IsNone()
+}
+
+func (o Order) Serialize() string {
+	return fmt.Sprintf("%s.%s", o.orderBy, o.orderType.Value())
 }
