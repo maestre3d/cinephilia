@@ -20,10 +20,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1cf68161-61eb-42a5-9fa6-24ac9ed1e194" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/cinephilia.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/lambda/movie/create/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/cmd/lambda/movie/create/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/application/tracker/movie/create_command.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/application/tracker/movie/create_command.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/application/tracker/movie/create_command_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/application/tracker/movie/create_command_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/application/tracker/movie/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/application/tracker/movie/creator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/application/tracker/movie/finder.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/application/tracker/movie/finder.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/aggregate_root.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/aggregate_root.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/command_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/command_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/event.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/event.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/event_publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/event_publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/identifier.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/identifier.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/description.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/description.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/display_name.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/display_name.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/errors.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/errors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/movie.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/movie.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/movie_created.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/movie_created.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/movie_id.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/movie_id.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/movie_user_id.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/movie_user_id.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/movie/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/movie/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/tracker/user_id.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/domain/tracker/user_id.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infrastructure/persistence/postgres_pool.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/infrastructure/persistence/postgres_pool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infrastructure/tracker/movie/persistence/in_memory_movie_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/infrastructure/tracker/movie/persistence/in_memory_movie_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infrastructure/tracker/movie/persistence/postgres_movie_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/watch-list-service/internal/infrastructure/tracker/movie/persistence/postgres_movie_repository.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,19 +84,21 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/internal/shared" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/watch-list-service" />
       <recent name="$PROJECT_DIR$/internal/shared" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/watch-list-service" />
+      <recent name="$PROJECT_DIR$/internal/domain" />
       <recent name="$PROJECT_DIR$/cmd/lambda/movie" />
       <recent name="$PROJECT_DIR$/internal/application/tracker" />
       <recent name="$PROJECT_DIR$/internal/domain/tracker" />
-      <recent name="$PROJECT_DIR$/internal/domain" />
-      <recent name="$PROJECT_DIR$/internal/domain/shared" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -93,6 +116,14 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add IDEA files" />
+    <MESSAGE value="Add shared kernel domain" />
+    <MESSAGE value="Update IDEA workspace" />
+    <MESSAGE value="Add uuid and nanoid modules" />
+    <MESSAGE value="Add initial movie aggregate with mocking infrastructure" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add initial movie aggregate with mocking infrastructure" />
+  </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
@@ -101,6 +132,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="520" y="287" key="#Go_Modules/0.0.1440.900@0.0.1440.900" timestamp="1605683884850" />
+    <state x="456" y="256" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1605844458324">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="456" y="256" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900@0.0.1440.900" timestamp="1605844458324" />
     <state x="375" y="232" key="EditFileWatcherDialog" timestamp="1605831989374">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
