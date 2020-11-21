@@ -1,10 +1,12 @@
 package movie
 
+import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+
 // CreateCommand requests a Movie creation
 //	@DTO
 //	@Command
 type CreateCommand struct {
-	Id          string
+	MovieId     string
 	UserId      string
 	CategoryId  string
 	DirectorId  string
@@ -14,4 +16,8 @@ type CreateCommand struct {
 	Picture     string
 	WatchUrl    string
 	CrawlUrl    string
+}
+
+func (c CreateCommand) Id() string {
+	return domain.CinephiliaDomainAlt + ".tracker.movie.create"
 }

@@ -2,7 +2,6 @@ package movie
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	"github.com/neutrinocorp/ddderr"
@@ -23,7 +22,6 @@ func NewImdbMovieCrawler(api *gomdb.OmdbApi) *ImdbMovieCrawler {
 }
 
 func (i ImdbMovieCrawler) Crawl(_ context.Context, url movie.CrawlUrl) (*movie.CrawledMovie, error) {
-	log.Printf("searching IMDb Id: %s", i.getIdFromUrl(url))
 	movRes, err := i.api.MovieByImdbID(i.getIdFromUrl(url))
 	if err != nil {
 		return nil, ddderr.NewInfrastructure(err, "api error")

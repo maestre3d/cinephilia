@@ -2,6 +2,8 @@ package movie
 
 import (
 	"context"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+	"github.com/neutrinocorp/ddderr"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
@@ -19,8 +21,12 @@ func NewCreateByCrawlCommandHandler(creator *Creator, crawler movie.MovieCrawler
 	return &CreateByCrawlCommandHandler{creator: creator, crawler: crawler}
 }
 
-func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, command CreateByCrawlCommand) error {
-	movieId, err := movie.NewMovieId(command.Id)
+func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {
+	command, ok := cmd.(CreateByCrawlCommand)
+	if !ok {
+		return ddderr.NewInvalidFormat("command", "create_by_crawl command")
+	}
+	movieId, err := movie.NewMovieId(command.MovieId)
 	if err != nil {
 		return err
 	}

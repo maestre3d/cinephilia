@@ -8,6 +8,9 @@ import (
 	"github.com/eefret/gomdb"
 	"github.com/google/uuid"
 	movieapp "github.com/maestre3d/cinephilia/watch-list-service/internal/application/tracker/movie"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/bus"
 	movieinfra "github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie/persistence"
 	gonanoid "github.com/matoous/go-nanoid"
@@ -17,15 +20,48 @@ import (
 func main() {
 	ctx := context.Background()
 	movieRepo := persistence.NewInMemoryMovieRepository()
-	movieCreator := movieapp.NewCreator(movieRepo)
-	movieHandler := movieapp.NewCreateCommandHandler(movieCreator)
+	commandBus := initSyncCommandBus(movieRepo)
 
+	go execCreate(ctx, commandBus)
+	movieId := execCrawl(ctx, commandBus)
+	execFind(ctx, initSyncQueryBus(movieRepo), movieId)
+}
+
+func initSyncCommandBus(repo movie.Repository) domain.CommandBus {
+	creator := movieapp.NewCreator(repo)
+	commandBus := bus.NewInMemorySyncCommand()
+	err := commandBus.RegisterHandler(movieapp.CreateByCrawlCommand{}, movieapp.NewCreateByCrawlCommandHandler(creator,
+		movieinfra.NewImdbMovieCrawler(gomdb.Init("XXXX"))))
+	if err != nil {
+		log.Fatal(ddderr.GetDescription(err))
+	}
+
+	err = commandBus.RegisterHandler(movieapp.CreateCommand{}, movieapp.NewCreateCommandHandler(creator))
+	if err != nil {
+		log.Fatal(ddderr.GetDescription(err))
+	}
+
+	return commandBus
+}
+
+func initSyncQueryBus(repo movie.Repository) domain.QueryBus {
+	queryBus := bus.NewInMemorySyncQuery()
+	err := queryBus.RegisterHandler(movieapp.FindQuery{},
+		movieapp.NewFindQueryHandler(movieapp.NewFinder(repo)))
+	if err != nil {
+		log.Fatal(ddderr.GetDescription(err))
+	}
+
+	return queryBus
+}
+
+func execCreate(ctx context.Context, commandBus domain.CommandBus) {
 	movieId := uuid.New()
 	userId, _ := gonanoid.ID(16)
 	categoryId, _ := gonanoid.ID(16)
 
-	err := movieHandler.Invoke(ctx, movieapp.CreateCommand{
-		Id:          movieId.String(),
+	err := commandBus.Dispatch(ctx, movieapp.CreateCommand{
+		MovieId:     movieId.String(),
 		DisplayName: "There will be blood",
 		Description: "Directed by Paul Thomas Anderson. Lead actor: Daniel Day Lewis.",
 		CategoryId:  categoryId,
@@ -37,8 +73,8 @@ func main() {
 
 	movieId = uuid.New()
 	directorId, _ := gonanoid.ID(16)
-	err = movieHandler.Invoke(ctx, movieapp.CreateCommand{
-		Id:          movieId.String(),
+	err = commandBus.Dispatch(ctx, movieapp.CreateCommand{
+		MovieId:     movieId.String(),
 		DisplayName: "Blade Runner 2049",
 		UserId:      userId,
 		CategoryId:  categoryId,
@@ -54,31 +90,29 @@ func main() {
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
-
-	queryHandler := movieapp.NewFindQueryHandler(movieapp.NewFinder(movieRepo))
-	mov, err := queryHandler.Invoke(ctx, movieapp.FindQuery{Id: execCrawl(ctx, movieCreator)})
-	if err != nil {
-		log.Fatal(ddderr.GetDescription(err))
-	}
-
-	movieJSON, _ := json.Marshal(mov)
-	log.Print(string(movieJSON))
 }
 
-func execCrawl(ctx context.Context, creator *movieapp.Creator) string {
-	handler := movieapp.NewCreateByCrawlCommandHandler(creator,
-		movieinfra.NewImdbMovieCrawler(gomdb.Init("XXXX")))
-
+func execCrawl(ctx context.Context, commandBus domain.CommandBus) string {
 	movieId := uuid.New()
 	userId, _ := gonanoid.ID(16)
-	err := handler.Invoke(ctx, movieapp.CreateByCrawlCommand{
-		Id:       movieId.String(),
+	err := commandBus.Dispatch(ctx, movieapp.CreateByCrawlCommand{
+		MovieId:  movieId.String(),
 		UserId:   userId,
-		CrawlUrl: "https://www.imdb.com/title/tt5727208/?ref_=ttls_li_tt", // Uncut Gems by Safdie Brothers
+		CrawlUrl: "https://www.imdb.com/title/tt1856101/?ref_=nv_sr_srsg_0", // Uncut Gems by Safdie Brothers
 	})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
 
 	return movieId.String()
+}
+
+func execFind(ctx context.Context, queryBus domain.QueryBus, id string) {
+	mov, err := queryBus.Ask(ctx, movieapp.FindQuery{MovieId: id})
+	if err != nil {
+		log.Fatal(ddderr.GetDescription(err))
+	}
+
+	movieJSON, _ := json.Marshal(mov)
+	log.Print(string(movieJSON))
 }

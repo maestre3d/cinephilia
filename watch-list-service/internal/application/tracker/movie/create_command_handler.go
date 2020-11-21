@@ -3,6 +3,10 @@ package movie
 import (
 	"context"
 
+	"github.com/neutrinocorp/ddderr"
+
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+
 	"github.com/hashicorp/go-multierror"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
@@ -18,9 +22,14 @@ func NewCreateCommandHandler(creator *Creator) *CreateCommandHandler {
 	return &CreateCommandHandler{creator: creator}
 }
 
-func (h CreateCommandHandler) Invoke(ctx context.Context, command CreateCommand) error {
+func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {
+	command, ok := cmd.(CreateCommand)
+	if !ok {
+		return ddderr.NewInvalidFormat("command", "create command")
+	}
+
 	var resultErr *multierror.Error
-	id, err := movie.NewMovieId(command.Id)
+	id, err := movie.NewMovieId(command.MovieId)
 	if err != nil {
 		resultErr = multierror.Append(resultErr, err)
 	}

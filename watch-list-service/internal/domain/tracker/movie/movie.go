@@ -28,7 +28,7 @@ func (m *Movie) record(event ...domain.Event) {
 	m.events = append(m.events, event...)
 }
 
-func (m Movie) PullEvents() []domain.Event {
+func (m *Movie) PullEvents() []domain.Event {
 	memoizedEvents := m.events
 	m.events = []domain.Event{}
 
