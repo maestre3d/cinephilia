@@ -30,7 +30,7 @@ type CreatorArgs struct {
 }
 
 func NewCreator(repository movie.Repository) *Creator {
-	return &Creator{repository: repository}
+	return &Creator{repository: repository, eventBus: nil}
 }
 
 func (c Creator) Create(ctx context.Context, args CreatorArgs) error {

@@ -9,6 +9,8 @@ import (
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
 )
 
+//	@Repository
+//	@Adapter
 type InMemoryMovieRepository struct {
 	db map[string]*movie.Movie
 	mu *sync.RWMutex

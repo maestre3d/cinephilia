@@ -1,0 +1,35 @@
+package movie
+
+import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+
+//	@DTO
+type CreateArgs struct {
+	Id          Id
+	UserId      UserId
+	CategoryId  CategoryId
+	DirectorId  DirectorId
+	DisplayName DisplayName
+	Description Description
+	Year        Year
+	Picture     Picture
+	WatchUrl    WatchUrl
+	CrawlUrl    CrawlUrl
+}
+
+func NewMovie(args CreateArgs) *Movie {
+	mov := &Movie{
+		id:          args.Id,
+		user:        args.UserId,
+		categoryId:  args.CategoryId,
+		director:    args.DirectorId,
+		displayName: args.DisplayName,
+		description: args.Description,
+		year:        args.Year,
+		picture:     args.Picture,
+		watchUrl:    args.WatchUrl,
+		crawlUrl:    args.CrawlUrl,
+		events:      make([]domain.Event, 0),
+	}
+	mov.record(NewMovieCreated(mov.Id().Value(), mov.DisplayName().Value(), mov.Description().Value()))
+	return mov
+}

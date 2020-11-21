@@ -34,16 +34,20 @@ func main() {
 	}
 
 	movieId = uuid.New()
-
+	directorId, _ := gonanoid.ID(16)
 	err = movieHandler.Invoke(ctx, movieapp.CreateCommand{
 		Id:          movieId.String(),
 		DisplayName: "Blade Runner 2049",
-		DirectorId:  categoryId,
-		Description: "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade " +
-			"Runner Rick Deckard, who's been missing for thirty years.",
+		UserId:      userId,
+		CategoryId:  categoryId,
+		DirectorId:  directorId,
+		Description: "Thirty years after the events of the first film, a new blade runner, LAPD Officer K " +
+			"(Ryan Gosling), unearths a long-buried secret that has the potential to plunge what's left " +
+			"of society into chaos. K's discovery leads him on a quest to find Rick Deckard (Harrison Ford), " +
+			"a former LAPD blade runner who has been missing for 30 years.",
 		Year:     2017,
 		WatchUrl: "https://www.netflix.com/us/title/80185760",
-		UserId:   userId,
+		Picture:  "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg",
 	})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
