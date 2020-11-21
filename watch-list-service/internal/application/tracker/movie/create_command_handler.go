@@ -3,13 +3,10 @@ package movie
 import (
 	"context"
 
-	"github.com/neutrinocorp/ddderr"
-
-	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
-
 	"github.com/hashicorp/go-multierror"
-
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
+	"github.com/neutrinocorp/ddderr"
 )
 
 // CreateCommandHandler receives CreateCommand(s) and creates a Movie

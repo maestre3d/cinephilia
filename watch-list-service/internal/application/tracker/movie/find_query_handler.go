@@ -4,9 +4,8 @@ import (
 	"context"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
-	"github.com/neutrinocorp/ddderr"
-
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
+	"github.com/neutrinocorp/ddderr"
 )
 
 // FindQueryHandler receives a FindQuery and search for a movie by Id

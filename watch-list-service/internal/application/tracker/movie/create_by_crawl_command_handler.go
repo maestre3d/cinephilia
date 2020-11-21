@@ -2,11 +2,11 @@ package movie
 
 import (
 	"context"
-	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
-	"github.com/neutrinocorp/ddderr"
 
 	"github.com/hashicorp/go-multierror"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
+	"github.com/neutrinocorp/ddderr"
 )
 
 // CreateByCrawlCommandHandler receives CreateByCrawlCommand(s), creates a Movie by fetching an external url
