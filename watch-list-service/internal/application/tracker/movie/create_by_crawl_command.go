@@ -5,5 +5,7 @@ package movie
 //	@Async
 //	@DTO
 type CreateByCrawlCommand struct {
+	Id       string
+	UserId   string
 	CrawlUrl string
 }

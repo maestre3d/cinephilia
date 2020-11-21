@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
-
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
 )
 

@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"log"
 
+	"github.com/eefret/gomdb"
 	"github.com/google/uuid"
-
 	movieapp "github.com/maestre3d/cinephilia/watch-list-service/internal/application/tracker/movie"
+	movieinfra "github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie/persistence"
 	gonanoid "github.com/matoous/go-nanoid"
 	"github.com/neutrinocorp/ddderr"
@@ -16,7 +17,8 @@ import (
 func main() {
 	ctx := context.Background()
 	movieRepo := persistence.NewInMemoryMovieRepository()
-	movieHandler := movieapp.NewCreateCommandHandler(movieapp.NewCreator(movieRepo))
+	movieCreator := movieapp.NewCreator(movieRepo)
+	movieHandler := movieapp.NewCreateCommandHandler(movieCreator)
 
 	movieId := uuid.New()
 	userId, _ := gonanoid.ID(16)
@@ -54,11 +56,29 @@ func main() {
 	}
 
 	queryHandler := movieapp.NewFindQueryHandler(movieapp.NewFinder(movieRepo))
-	mov, err := queryHandler.Invoke(ctx, movieapp.FindQuery{Id: movieId.String()})
+	mov, err := queryHandler.Invoke(ctx, movieapp.FindQuery{Id: execCrawl(ctx, movieCreator)})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
 
 	movieJSON, _ := json.Marshal(mov)
 	log.Print(string(movieJSON))
+}
+
+func execCrawl(ctx context.Context, creator *movieapp.Creator) string {
+	handler := movieapp.NewCreateByCrawlCommandHandler(creator,
+		movieinfra.NewImdbMovieCrawler(gomdb.Init("XXXX")))
+
+	movieId := uuid.New()
+	userId, _ := gonanoid.ID(16)
+	err := handler.Invoke(ctx, movieapp.CreateByCrawlCommand{
+		Id:       movieId.String(),
+		UserId:   userId,
+		CrawlUrl: "https://www.imdb.com/title/tt5727208/?ref_=ttls_li_tt", // Uncut Gems by Safdie Brothers
+	})
+	if err != nil {
+		log.Fatal(ddderr.GetDescription(err))
+	}
+
+	return movieId.String()
 }
