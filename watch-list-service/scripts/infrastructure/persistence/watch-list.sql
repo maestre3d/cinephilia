@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS movie (
     display_name varchar(256) NOT NULL,
     description varchar(512) DEFAULT NULL,
     director_id varchar(256) DEFAULT NULL,
-    year interval DEFAULT date_part('year', CURRENT_DATE),
+    year integer DEFAULT date_part('year', CURRENT_DATE),
     picture varchar(2048) DEFAULT NULL,
     watch_url varchar(2048) DEFAULT NULL,
 
