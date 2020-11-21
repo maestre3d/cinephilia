@@ -12,6 +12,9 @@ var (
 
 	InvalidPictureExtension = ddderr.NewInvalidFormat("movie_picture", "jpg, jpeg, webp and png")
 
+	YearAboveMaxLength = ddderr.NewOutOfRange("movie_year", "0", "3000")
+	YearBelowMinLength = ddderr.NewOutOfRange("movie_year", "0", "3000")
+
 	AlreadyExists = ddderr.NewAlreadyExists(nil, "movie")
 	NotExists     = ddderr.NewNotFound(nil, "movie")
 )

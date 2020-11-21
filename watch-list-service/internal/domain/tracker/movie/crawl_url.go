@@ -31,7 +31,6 @@ func (u CrawlUrl) NullableValue() *string {
 	if u.Value() == "" {
 		return nil
 	}
-
 	val := u.Value()
 	return &val
 }

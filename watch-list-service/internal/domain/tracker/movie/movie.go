@@ -11,8 +11,10 @@ type Movie struct {
 	id          Id
 	user        UserId
 	categoryId  CategoryId
+	director    DirectorId
 	displayName DisplayName
 	description Description
+	year        Year
 
 	picture  Picture
 	watchUrl WatchUrl
@@ -22,19 +24,35 @@ type Movie struct {
 	events []domain.Event
 }
 
-func NewMovie(id Id, name DisplayName, description Description, userId UserId, categoryId CategoryId) *Movie {
+//	@DTO
+type CreateArgs struct {
+	Id          Id
+	UserId      UserId
+	CategoryId  CategoryId
+	DirectorId  DirectorId
+	DisplayName DisplayName
+	Description Description
+	Year        Year
+	Picture     Picture
+	WatchUrl    WatchUrl
+	CrawlUrl    CrawlUrl
+}
+
+func NewMovie(args CreateArgs) *Movie {
 	mov := &Movie{
-		id:          id,
-		user:        userId,
-		categoryId:  categoryId,
-		displayName: name,
-		description: description,
-		picture:     Picture{},
-		watchUrl:    WatchUrl{},
-		crawlUrl:    CrawlUrl{},
+		id:          args.Id,
+		user:        args.UserId,
+		categoryId:  args.CategoryId,
+		director:    args.DirectorId,
+		displayName: args.DisplayName,
+		description: args.Description,
+		year:        args.Year,
+		picture:     args.Picture,
+		watchUrl:    args.WatchUrl,
+		crawlUrl:    args.CrawlUrl,
 		events:      make([]domain.Event, 0),
 	}
-	mov.record(NewMovieCreated(id.Value(), name.Value(), description.Value()))
+	mov.record(NewMovieCreated(mov.Id().Value(), mov.DisplayName().Value(), mov.Description().Value()))
 	return mov
 }
 
@@ -65,12 +83,20 @@ func (m Movie) Category() CategoryId {
 	return m.categoryId
 }
 
+func (m Movie) Director() DirectorId {
+	return m.director
+}
+
 func (m Movie) DisplayName() DisplayName {
 	return m.displayName
 }
 
 func (m Movie) Description() Description {
 	return m.description
+}
+
+func (m Movie) Year() Year {
+	return m.year
 }
 
 func (m Movie) Picture() Picture {

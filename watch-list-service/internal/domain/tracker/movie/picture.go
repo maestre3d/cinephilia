@@ -50,7 +50,6 @@ func (p Picture) NullableValue() *string {
 	if p.Value() == "" {
 		return nil
 	}
-
 	val := p.Value()
 	return &val
 }

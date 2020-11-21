@@ -5,8 +5,13 @@ package movie
 //	@Command
 type CreateCommand struct {
 	Id          string
-	DisplayName string
-	Description string
 	UserId      string
 	CategoryId  string
+	DirectorId  string
+	DisplayName string
+	Description string
+	Year        int
+	Picture     string
+	WatchUrl    string
+	CrawlUrl    string
 }

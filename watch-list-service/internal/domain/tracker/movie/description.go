@@ -34,7 +34,5 @@ func (d Description) NullableValue() *string {
 	if d.Value() == "" {
 		return nil
 	}
-
-	val := d.value
-	return &val
+	return &d.value
 }

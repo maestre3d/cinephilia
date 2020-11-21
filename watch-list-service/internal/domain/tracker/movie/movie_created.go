@@ -17,7 +17,7 @@ func NewMovieCreated(id, name, description string) MovieCreated {
 }
 
 func (c MovieCreated) GetName() string {
-	return "cinephilia.tracker.movie.created"
+	return "movie.created"
 }
 
 func (c MovieCreated) ToPrimitive() interface{} {

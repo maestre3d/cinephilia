@@ -30,7 +30,6 @@ func (i CategoryId) NullableValue() *string {
 	if i.Value() == "" {
 		return nil
 	}
-
 	val := i.Value()
 	return &val
 }

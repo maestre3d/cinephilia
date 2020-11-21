@@ -30,7 +30,6 @@ func (u WatchUrl) NullableValue() *string {
 	if u.Value() == "" {
 		return nil
 	}
-
 	val := u.Value()
 	return &val
 }

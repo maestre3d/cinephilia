@@ -38,9 +38,12 @@ func main() {
 	err = movieHandler.Invoke(ctx, movieapp.CreateCommand{
 		Id:          movieId.String(),
 		DisplayName: "Blade Runner 2049",
+		DirectorId:  categoryId,
 		Description: "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade " +
 			"Runner Rick Deckard, who's been missing for thirty years.",
-		UserId: userId,
+		Year:     2017,
+		WatchUrl: "https://www.netflix.com/us/title/80185760",
+		UserId:   userId,
 	})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))

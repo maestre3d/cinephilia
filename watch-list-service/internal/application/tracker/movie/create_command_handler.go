@@ -3,6 +3,8 @@ package movie
 import (
 	"context"
 
+	"github.com/hashicorp/go-multierror"
+
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
 )
 
@@ -17,26 +19,57 @@ func NewCreateCommandHandler(creator *Creator) *CreateCommandHandler {
 }
 
 func (h CreateCommandHandler) Invoke(ctx context.Context, command CreateCommand) error {
+	var resultErr *multierror.Error
 	id, err := movie.NewMovieId(command.Id)
 	if err != nil {
-		return err
-	}
-	displayName, err := movie.NewDisplayName(command.DisplayName)
-	if err != nil {
-		return err
-	}
-	description, err := movie.NewDescription(command.Description)
-	if err != nil {
-		return err
+		resultErr = multierror.Append(resultErr, err)
 	}
 	userId, err := movie.NewUserId(command.UserId)
 	if err != nil {
-		return err
+		resultErr = multierror.Append(resultErr, err)
 	}
 	categoryId, err := movie.NewCategoryId(command.CategoryId)
 	if err != nil {
-		return err
+		resultErr = multierror.Append(resultErr, err)
+	}
+	directorId, err := movie.NewDirectorId(command.DirectorId)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	displayName, err := movie.NewDisplayName(command.DisplayName)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	description, err := movie.NewDescription(command.Description)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	year, err := movie.NewYear(uint32(command.Year))
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	picture, err := movie.NewPicture(command.Picture)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	watchUrl, err := movie.NewWatchUrl(command.WatchUrl)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
 	}
 
-	return h.creator.Create(ctx, *id, *displayName, *description, *userId, *categoryId)
+	if resultErr != nil && resultErr.ErrorOrNil() != nil {
+		return resultErr
+	}
+	return h.creator.Create(ctx, CreatorArgs{
+		Id:          *id,
+		UserId:      *userId,
+		CategoryId:  *categoryId,
+		DirectorId:  *directorId,
+		DisplayName: *displayName,
+		Description: *description,
+		Year:        *year,
+		Picture:     *picture,
+		WatchUrl:    *watchUrl,
+		CrawlUrl:    movie.CrawlUrl{},
+	})
 }
