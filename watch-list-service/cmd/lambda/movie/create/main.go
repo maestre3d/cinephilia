@@ -20,7 +20,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	pqPool, err := persistence.NewPostgresPool()
+	pqPool, err := persistence.NewPostgresPool(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
