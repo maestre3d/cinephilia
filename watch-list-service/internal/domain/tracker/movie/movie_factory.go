@@ -6,8 +6,6 @@ import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 type CreateArgs struct {
 	Id          Id
 	UserId      UserId
-	CategoryId  CategoryId
-	DirectorId  DirectorId
 	DisplayName DisplayName
 	Description Description
 	Year        Year
@@ -20,8 +18,6 @@ func NewMovie(args CreateArgs) *Movie {
 	mov := &Movie{
 		id:          args.Id,
 		user:        args.UserId,
-		categoryId:  args.CategoryId,
-		director:    args.DirectorId,
 		displayName: args.DisplayName,
 		description: args.Description,
 		year:        args.Year,

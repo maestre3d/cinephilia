@@ -78,8 +78,6 @@ func (h CreateByCrawlCommandHandler) createMovie(ctx context.Context, command Cr
 	return h.creator.Create(ctx, CreatorArgs{
 		Id:          *movieId,
 		UserId:      *userId,
-		CategoryId:  movie.CategoryId{},
-		DirectorId:  movie.DirectorId{},
 		DisplayName: *displayName,
 		Description: *description,
 		Year:        *year,

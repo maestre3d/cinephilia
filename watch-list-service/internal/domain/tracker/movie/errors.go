@@ -15,6 +15,8 @@ var (
 	YearAboveMaxLength = ddderr.NewOutOfRange("movie_year", "0", "3000")
 	YearBelowMinLength = ddderr.NewOutOfRange("movie_year", "0", "3000")
 
+	CrawlUrlIsNotAvailable = ddderr.NewInvalidFormat("movie_crawl_url", "IMDb link")
+
 	AlreadyExists = ddderr.NewAlreadyExists(nil, "movie")
 	NotExists     = ddderr.NewNotFound(nil, "movie")
 )

@@ -34,14 +34,6 @@ func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) er
 	if err != nil {
 		resultErr = multierror.Append(resultErr, err)
 	}
-	categoryId, err := movie.NewCategoryId(command.CategoryId)
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
-	}
-	directorId, err := movie.NewDirectorId(command.DirectorId)
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
-	}
 	displayName, err := movie.NewDisplayName(command.DisplayName)
 	if err != nil {
 		resultErr = multierror.Append(resultErr, err)
@@ -69,8 +61,6 @@ func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) er
 	return h.creator.Create(ctx, CreatorArgs{
 		Id:          *id,
 		UserId:      *userId,
-		CategoryId:  *categoryId,
-		DirectorId:  *directorId,
 		DisplayName: *displayName,
 		Description: *description,
 		Year:        *year,

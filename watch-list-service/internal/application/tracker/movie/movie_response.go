@@ -7,8 +7,6 @@ import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain/track
 type MovieResponse struct {
 	Id          string  `json:"id"`
 	UserId      string  `json:"user_id"`
-	CategoryId  *string `json:"category_id"`
-	DirectorId  *string `json:"director_id"`
 	DisplayName string  `json:"display_name"`
 	Description *string `json:"description"`
 	Year        *uint32 `json:"year"`
@@ -21,8 +19,6 @@ func newMovieResponseFromAggregate(mov movie.Movie) *MovieResponse {
 	return &MovieResponse{
 		Id:          mov.Id().Value(),
 		UserId:      mov.User().Value(),
-		CategoryId:  mov.Category().NullableValue(),
-		DirectorId:  mov.Director().NullableValue(),
 		DisplayName: mov.DisplayName().Value(),
 		Description: mov.Description().NullableValue(),
 		Year:        mov.Year().NullableValue(),

@@ -8,8 +8,6 @@ import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 type CreateCommand struct {
 	MovieId     string
 	UserId      string
-	CategoryId  string
-	DirectorId  string
 	DisplayName string
 	Description string
 	Year        int

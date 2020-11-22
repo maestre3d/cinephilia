@@ -1,6 +1,10 @@
 package movie
 
-import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+import (
+	"strings"
+
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
+)
 
 // CrawlUrl film external data URL, Cinephilia will crawl asynchronously when requested
 //
@@ -11,16 +15,35 @@ type CrawlUrl struct {
 }
 
 func NewCrawlUrl(value string) (*CrawlUrl, error) {
+	crawlUrl := new(CrawlUrl)
+	if err := crawlUrl.ensureIsImdb(value); value != "" && err != nil {
+		return nil, err
+	}
+
 	url, err := domain.NewUrl("crawl_url", value)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CrawlUrl{url: *url}, nil
+	crawlUrl.url = *url
+	return crawlUrl, nil
 }
 
 func (u CrawlUrl) IsEmpty() bool {
 	return u.Value() == ""
+}
+
+func (u CrawlUrl) ensureIsImdb(value string) error {
+	//	rules
+	//	a.	value == imdb valid domain
+	isImdb := strings.HasPrefix(value, "https://www.imdb.com") || strings.HasPrefix(value,
+		"http://www.imdb.com") || strings.HasPrefix(value, "https://imdb.com") ||
+		strings.HasPrefix(value, "http://imdb.com")
+	if !isImdb {
+		return CrawlUrlIsNotAvailable
+	}
+
+	return nil
 }
 
 func (u CrawlUrl) Value() string {

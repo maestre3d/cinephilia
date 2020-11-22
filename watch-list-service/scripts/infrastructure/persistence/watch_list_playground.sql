@@ -43,7 +43,7 @@ SELECT m.id as movie_id, m.display_name as movie_name, d.id as director_id, d.di
 FROM director as d, movie as m, movie_directors as md WHERE d.id = md.director_id AND m.id = md.movie_id
 ORDER BY movie_name;
 
-SELECT * FROM movie_by_directors;
+SELECT * FROM movie_by_directors ORDER BY movie_name;
 
 -- Movies by director
 SELECT * FROM movie INNER JOIN movie_directors md ON movie.id = md.movie_id AND director_id = 'hklWm5SFHDxe8R8m';

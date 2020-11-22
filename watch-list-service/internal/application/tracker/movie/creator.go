@@ -18,8 +18,6 @@ type Creator struct {
 type CreatorArgs struct {
 	Id          movie.Id
 	UserId      movie.UserId
-	CategoryId  movie.CategoryId
-	DirectorId  movie.DirectorId
 	DisplayName movie.DisplayName
 	Description movie.Description
 	Year        movie.Year
@@ -40,8 +38,6 @@ func (c Creator) Create(ctx context.Context, args CreatorArgs) error {
 	return c.repository.Save(ctx, *movie.NewMovie(movie.CreateArgs{
 		Id:          args.Id,
 		UserId:      args.UserId,
-		CategoryId:  args.CategoryId,
-		DirectorId:  args.DirectorId,
 		DisplayName: args.DisplayName,
 		Description: args.Description,
 		Year:        args.Year,

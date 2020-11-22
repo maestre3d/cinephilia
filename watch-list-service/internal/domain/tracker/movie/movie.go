@@ -10,8 +10,6 @@ import (
 type Movie struct {
 	id          Id
 	user        UserId
-	categoryId  CategoryId
-	director    DirectorId
 	displayName DisplayName
 	description Description
 	year        Year
@@ -41,14 +39,6 @@ func (m Movie) Id() Id {
 
 func (m Movie) User() UserId {
 	return m.user
-}
-
-func (m Movie) Category() CategoryId {
-	return m.categoryId
-}
-
-func (m Movie) Director() DirectorId {
-	return m.director
 }
 
 func (m Movie) DisplayName() DisplayName {
