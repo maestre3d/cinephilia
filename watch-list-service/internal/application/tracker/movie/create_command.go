@@ -10,7 +10,7 @@ type CreateCommand struct {
 	UserId      string
 	DisplayName string
 	Description string
-	Year        int
+	Year        string
 	Picture     string
 	WatchUrl    string
 	CrawlUrl    string

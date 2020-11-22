@@ -2,6 +2,7 @@ package movie
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
@@ -42,7 +43,11 @@ func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) er
 	if err != nil {
 		resultErr = multierror.Append(resultErr, err)
 	}
-	year, err := movie.NewYear(uint32(command.Year))
+	yearInt, err := strconv.ParseInt(command.Year, 10, 32)
+	if err != nil {
+		return ddderr.NewInvalidFormat("year", "integer")
+	}
+	year, err := movie.NewYear(uint32(yearInt))
 	if err != nil {
 		resultErr = multierror.Append(resultErr, err)
 	}

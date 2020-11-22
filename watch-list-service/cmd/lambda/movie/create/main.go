@@ -88,7 +88,7 @@ func execCreate(ctx context.Context, commandBus domain.CommandBus) {
 			"(Ryan Gosling), unearths a long-buried secret that has the potential to plunge what's left " +
 			"of society into chaos. K's discovery leads him on a quest to find Rick Deckard (Harrison Ford), " +
 			"a former LAPD blade runner who has been missing for 30 years.",
-		Year:     2017,
+		Year:     "2017",
 		WatchUrl: "https://www.netflix.com/us/title/80185760",
 		Picture:  "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg",
 	})
