@@ -30,6 +30,12 @@ INSERT INTO movie(id, user_id, display_name, year) VALUES ('IYhcjNB8_9zooXbJ', '
 
 SELECT * FROM movie;
 
+-- Soft delete a movie
+UPDATE movie SET active = false WHERE id = 'WtnFqyElemXlKmvK';
+
+-- Get user's movie list
+SELECT * FROM movie WHERE user_id = 'ee154507-c93d-42f6-bbd9-a32e47151057' AND active = true;
+
 INSERT INTO movie_directors VALUES ('zwfXK5PwCY7fTz31', '8EFckHhch1uHsZ8Q');
 INSERT INTO movie_directors VALUES ('zwfXK5PwCY7fTz31', 'sf9inHnsluMRioeV');
 INSERT INTO movie_directors VALUES ('WtnFqyElemXlKmvK', '8EFckHhch1uHsZ8Q');
