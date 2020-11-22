@@ -1,8 +1,8 @@
-package movie
+package director
 
 import "github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker"
 
-// DisplayName film name which will be displayed to users
+// DisplayName director name which will be displayed to users
 //	@ValueObject
 type DisplayName struct {
 	value tracker.DisplayName
@@ -13,7 +13,7 @@ func NewDisplayName(value string) (*DisplayName, error) {
 	if err := name.ensureRequired(value); err != nil {
 		return nil, err
 	}
-	displayName, err := tracker.NewDisplayName("movie_display_name", value)
+	displayName, err := tracker.NewDisplayName("director_display_name", value)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (n DisplayName) ensureRequired(value string) error {
 	//	rules
 	//	a.	display_name.length >= 1
 	if value == "" {
-		return NameRequired
+		return DisplayNameRequired
 	}
 
 	return nil

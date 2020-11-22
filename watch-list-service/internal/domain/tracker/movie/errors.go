@@ -3,14 +3,12 @@ package movie
 import "github.com/neutrinocorp/ddderr"
 
 var (
+	IdRequired   = ddderr.NewRequired("movie_id")
 	UserRequired = ddderr.NewRequired("movie_user_id")
 
-	NameRequired       = ddderr.NewRequired("movie_display_name")
-	NameAboveMaxLength = ddderr.NewOutOfRange("movie_display_name", "1", "128")
+	NameRequired = ddderr.NewRequired("movie_display_name")
 
 	DescriptionAboveMaxLength = ddderr.NewOutOfRange("movie_description", "0", "512")
-
-	InvalidPictureExtension = ddderr.NewInvalidFormat("movie_picture", "jpg, jpeg, webp and png")
 
 	YearAboveMaxLength = ddderr.NewOutOfRange("movie_year", "0", "3000")
 	YearBelowMinLength = ddderr.NewOutOfRange("movie_year", "0", "3000")

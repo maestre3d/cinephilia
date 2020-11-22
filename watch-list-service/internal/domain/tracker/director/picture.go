@@ -1,10 +1,10 @@
-package movie
+package director
 
 import (
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker"
 )
 
-// Picture film cover/poster image referenced by URL
+// Picture director portrait image referenced by URL
 //	@ValueObject
 type Picture struct {
 	value tracker.Picture
@@ -12,7 +12,7 @@ type Picture struct {
 
 func NewPicture(value string) (*Picture, error) {
 	picture := new(Picture)
-	pic, err := tracker.NewPicture("movie_picture", value)
+	pic, err := tracker.NewPicture("director_picture", value)
 	if err != nil {
 		return nil, err
 	}
