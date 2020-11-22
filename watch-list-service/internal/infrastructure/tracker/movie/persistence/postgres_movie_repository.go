@@ -3,6 +3,7 @@ package persistence
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"sync"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
@@ -55,6 +56,9 @@ func (p *PostgresMovieRepository) Search(ctx context.Context, movieId movie.Id) 
 			&movSQL.Picture, &movSQL.WatchUrl, &movSQL.CreateTime, &movSQL.UpdateTime, &movSQL.Active,
 			&movSQL.CrawlUrl)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
