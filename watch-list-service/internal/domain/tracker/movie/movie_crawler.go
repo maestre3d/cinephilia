@@ -7,10 +7,12 @@ import (
 // CrawledMovie film crawled from an external system, contains primitives
 //	@DTO
 type CrawledMovie struct {
-	Title  string
-	Plot   string
-	Year   int
-	Poster string
+	Title      string
+	Plot       string
+	Year       int
+	Poster     string
+	CrawlUrl   string
+	ExternalId string
 }
 
 // MovieCrawler fetch movie data from an external system by URL

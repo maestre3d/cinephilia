@@ -26,6 +26,23 @@ func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, cmd domain.Comm
 	if !ok {
 		return ddderr.NewInvalidFormat("command", "create_by_crawl command")
 	}
+
+	preCrawlUrl, err := movie.NewCrawlUrl(command.CrawlUrl)
+	if err != nil {
+		return err
+	}
+
+	crawled, err := h.crawler.Crawl(ctx, *preCrawlUrl)
+	if err != nil {
+		return err
+	}
+
+	return h.createMovie(ctx, command, crawled)
+}
+
+func (h CreateByCrawlCommandHandler) createMovie(ctx context.Context, command CreateByCrawlCommand,
+	crawled *movie.CrawledMovie) error {
+	var resultErr *multierror.Error
 	movieId, err := movie.NewMovieId(command.MovieId)
 	if err != nil {
 		return err
@@ -34,31 +51,25 @@ func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, cmd domain.Comm
 	if err != nil {
 		return err
 	}
-	crawlUrl, err := movie.NewCrawlUrl(command.CrawlUrl)
+	displayName, err := movie.NewDisplayName(crawled.Title)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	description, err := movie.NewDescription(crawled.Plot)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	year, err := movie.NewYear(uint32(crawled.Year))
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	picture, err := movie.NewPicture(crawled.Poster)
+	if err != nil {
+		resultErr = multierror.Append(resultErr, err)
+	}
+	crawlUrl, err := movie.NewCrawlUrl(crawled.CrawlUrl)
 	if err != nil {
 		return err
-	}
-	movCrawled, err := h.crawler.Crawl(ctx, *crawlUrl)
-	if err != nil {
-		return err
-	}
-
-	var resultErr *multierror.Error
-	displayName, err := movie.NewDisplayName(movCrawled.Title)
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
-	}
-	description, err := movie.NewDescription(movCrawled.Plot)
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
-	}
-	year, err := movie.NewYear(uint32(movCrawled.Year))
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
-	}
-	picture, err := movie.NewPicture(movCrawled.Poster)
-	if err != nil {
-		resultErr = multierror.Append(resultErr, err)
 	}
 
 	if resultErr != nil && resultErr.ErrorOrNil() != nil {

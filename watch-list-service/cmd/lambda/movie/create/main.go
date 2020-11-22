@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/eefret/gomdb"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/webscrap"
+
 	"github.com/google/uuid"
 	movieapp "github.com/maestre3d/cinephilia/watch-list-service/internal/application/tracker/movie"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
@@ -30,8 +31,13 @@ func main() {
 func initSyncCommandBus(repo movie.Repository) domain.CommandBus {
 	creator := movieapp.NewCreator(repo)
 	commandBus := bus.NewInMemorySyncCommand()
-	err := commandBus.RegisterHandler(movieapp.CreateByCrawlCommand{}, movieapp.NewCreateByCrawlCommandHandler(creator,
-		movieinfra.NewImdbMovieCrawler(gomdb.Init("XXXX"))))
+	imdbCollector, err := webscrap.NewCollyImdbCollector()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = commandBus.RegisterHandler(movieapp.CreateByCrawlCommand{}, movieapp.NewCreateByCrawlCommandHandler(creator,
+		movieinfra.NewImdbMovieCrawler(movieinfra.NewImdbWebScrapper(imdbCollector))))
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
@@ -93,18 +99,18 @@ func execCreate(ctx context.Context, commandBus domain.CommandBus) {
 }
 
 func execCrawl(ctx context.Context, commandBus domain.CommandBus) string {
-	movieId := uuid.New()
+	movieId, _ := gonanoid.ID(16)
 	userId, _ := gonanoid.ID(16)
 	err := commandBus.Dispatch(ctx, movieapp.CreateByCrawlCommand{
-		MovieId:  movieId.String(),
+		MovieId:  movieId,
 		UserId:   userId,
-		CrawlUrl: "https://www.imdb.com/title/tt1856101/?ref_=nv_sr_srsg_0", // Uncut Gems by Safdie Brothers
+		CrawlUrl: "https://www.imdb.com/title/tt5727208/?ref_=ttls_li_tt", // Uncut Gems by Safdie Brothers
 	})
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
 
-	return movieId.String()
+	return movieId
 }
 
 func execFind(ctx context.Context, queryBus domain.QueryBus, id string) {
@@ -112,6 +118,8 @@ func execFind(ctx context.Context, queryBus domain.QueryBus, id string) {
 	if err != nil {
 		log.Fatal(ddderr.GetDescription(err))
 	}
+	res := mov.(*movieapp.MovieResponse)
+	log.Print(res.Id)
 
 	movieJSON, _ := json.Marshal(mov)
 	log.Print(string(movieJSON))
