@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS movie (
     category_id varchar(128) DEFAULT NULL,
     display_name varchar(256) NOT NULL,
     description varchar(512) DEFAULT NULL,
-    director_id varchar(256) DEFAULT NULL,
     year integer DEFAULT date_part('year', CURRENT_DATE),
     picture varchar(2048) DEFAULT NULL,
     watch_url varchar(2048) DEFAULT NULL,
@@ -34,9 +33,20 @@ CREATE TABLE IF NOT EXISTS movie (
     update_time timestamptz NOT NULL DEFAULT now(),
     active boolean DEFAULT TRUE,
     crawl_url varchar(2048) DEFAULT NULL,
-    CONSTRAINT fk_director FOREIGN KEY (director_id) REFERENCES director(id) ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS movie_directors (
+    movie_id varchar(128) NOT NULL,
+    director_id varchar(128) NOT NULL,
+    CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE,
+    CONSTRAINT fk_director FOREIGN KEY (director_id) REFERENCES director(id) ON DELETE CASCADE,
+    PRIMARY KEY (movie_id, director_id)
+);
+
+CREATE VIEW movie_by_directors AS
+SELECT m.id as movie_id, m.display_name as movie_name, d.id as director_id, d.display_name as director_name
+FROM director as d, movie as m, movie_directors as md WHERE d.id = md.director_id AND m.id = md.movie_id;
 
 CREATE TABLE IF NOT EXISTS watch_queue (
     id varchar(128) NOT NULL,
