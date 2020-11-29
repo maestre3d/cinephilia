@@ -8,10 +8,21 @@ CREATE TABLE IF NOT EXISTS category (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS actor (
+	id varchar(128) NOT NULL,
+	user_id varchar(128) NOT NULL,
+	display_name varchar(256) NOT NULL,
+	picture varchar(2048) DEFAULT NULL,
+	create_time timestamptz NOT NULL DEFAULT now(),
+	update_time timestamptz NOT NULL DEFAULT now(),
+	active boolean DEFAULT TRUE,
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS director (
     id varchar(128) NOT NULL,
     user_id varchar(128) NOT NULL,
-    display_name varchar(128) NOT NULL,
+    display_name varchar(256) NOT NULL,
     picture varchar(2048) DEFAULT NULL,
     create_time timestamptz NOT NULL DEFAULT now(),
     update_time timestamptz NOT NULL DEFAULT now(),
@@ -41,6 +52,14 @@ CREATE TABLE IF NOT EXISTS movie_categories (
     CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE,
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE,
     PRIMARY KEY (movie_id, category_id)
+);
+
+CREATE TABLE IF NOT EXISTS movie_actors (
+	movie_id varchar(128) NOT NULL,
+	actor_id varchar(128) NOT NULL,
+	CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE,
+	CONSTRAINT fk_actor FOREIGN KEY (actor_id) REFERENCES actor(id) ON DELETE CASCADE,
+	PRIMARY KEY (movie_id, actor_id)
 );
 
 CREATE TABLE IF NOT EXISTS movie_directors (
