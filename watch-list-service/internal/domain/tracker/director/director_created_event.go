@@ -1,6 +1,6 @@
 package director
 
-// DirectorCreated A movie was created successfully
+// DirectorCreated A director was created successfully
 //	@DomainEvent
 type DirectorCreated struct {
 	id      string
