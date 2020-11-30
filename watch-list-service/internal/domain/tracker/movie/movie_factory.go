@@ -26,6 +26,6 @@ func NewMovie(args CreateArgs) *Movie {
 		crawlUrl:    args.CrawlUrl,
 		events:      make([]domain.Event, 0),
 	}
-	mov.record(NewMovieCreated(mov.Id().Value(), mov.DisplayName().Value(), mov.Description().Value()))
+	mov.record(newMovieCreated(mov.Id().Value(), mov.DisplayName().Value(), mov.Description().Value()))
 	return mov
 }

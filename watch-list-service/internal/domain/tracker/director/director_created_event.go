@@ -18,10 +18,15 @@ func NewDirectorCreated(id, userId, name, picture string) DirectorCreated {
 	}
 }
 
-func (c DirectorCreated) GetName() string {
+func (c DirectorCreated) Name() string {
 	return "director.created"
 }
 
-func (c DirectorCreated) ToPrimitive() interface{} {
-	return nil
+func (c DirectorCreated) ToPrimitive() map[string]string {
+	return map[string]string{
+		"director_id":  c.id,
+		"user_id":      c.userId,
+		"display_name": c.name,
+		"picture":      c.picture,
+	}
 }

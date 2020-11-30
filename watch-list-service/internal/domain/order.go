@@ -9,29 +9,29 @@ type OrderBy string
 // Order set ordering to an aggregate search by criteria
 //	@ValueObject
 type Order struct {
-	orderBy   OrderBy
-	orderType OrderType
+	by   OrderBy
+	kind OrderKind
 }
 
-func NewOrder(orderBy OrderBy, orderType OrderType) *Order {
+func NewOrder(orderBy OrderBy, orderKind OrderKind) *Order {
 	return &Order{
-		orderBy:   orderBy,
-		orderType: orderType,
+		by:   orderBy,
+		kind: orderKind,
 	}
 }
 
 func (o Order) By() OrderBy {
-	return o.orderBy
+	return o.by
 }
 
-func (o Order) Type() OrderType {
-	return o.orderType
+func (o Order) Kind() OrderKind {
+	return o.kind
 }
 
 func (o Order) HasOrder() bool {
-	return !o.orderType.IsNone()
+	return !o.kind.IsNone()
 }
 
 func (o Order) Serialize() string {
-	return fmt.Sprintf("%s.%s", o.orderBy, o.orderType.Value())
+	return fmt.Sprintf("%s.%s", o.by, o.kind.Value())
 }

@@ -24,7 +24,7 @@ func NewCreateByCrawlCommandHandler(creator *Creator, crawler movie.MovieCrawler
 func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {
 	command, ok := cmd.(CreateByCrawlCommand)
 	if !ok {
-		return ddderr.NewInvalidFormat("command", "create_by_crawl command")
+		return ddderr.NewInvalidFormat("command", cmd.Id())
 	}
 
 	preCrawlUrl, err := movie.NewCrawlUrl(command.CrawlUrl)

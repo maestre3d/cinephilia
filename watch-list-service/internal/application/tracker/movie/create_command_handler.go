@@ -23,7 +23,7 @@ func NewCreateCommandHandler(creator *Creator) *CreateCommandHandler {
 func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {
 	command, ok := cmd.(CreateCommand)
 	if !ok {
-		return ddderr.NewInvalidFormat("command", "create command")
+		return ddderr.NewInvalidFormat("command", cmd.Id())
 	}
 
 	var resultErr *multierror.Error

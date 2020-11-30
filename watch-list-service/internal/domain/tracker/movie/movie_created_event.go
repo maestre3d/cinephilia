@@ -8,7 +8,7 @@ type MovieCreated struct {
 	description string
 }
 
-func NewMovieCreated(id, name, description string) MovieCreated {
+func newMovieCreated(id, name, description string) MovieCreated {
 	return MovieCreated{
 		id:          id,
 		name:        name,
@@ -16,10 +16,14 @@ func NewMovieCreated(id, name, description string) MovieCreated {
 	}
 }
 
-func (c MovieCreated) GetName() string {
+func (_ MovieCreated) Name() string {
 	return "movie.created"
 }
 
-func (c MovieCreated) ToPrimitive() interface{} {
-	return nil
+func (c MovieCreated) ToPrimitive() map[string]string {
+	return map[string]string{
+		"movie_id":     c.id,
+		"display_name": c.name,
+		"description":  c.description,
+	}
 }

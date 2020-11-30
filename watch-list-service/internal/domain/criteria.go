@@ -4,26 +4,26 @@ package domain
 //	@DTO
 //	@DSL (Domain Selection Language)
 type Criteria struct {
-	limit     uint16
-	pageToken string
+	pageSize  PageSize
+	pageToken PageToken
 	order     Order
 	filters   Filters
 }
 
-func NewCriteria(limit uint16, pageToken string, order Order, filters Filters) *Criteria {
+func NewCriteria(pageSize PageSize, pageToken PageToken, order Order, filters Filters) *Criteria {
 	return &Criteria{
-		limit:     limit,
+		pageSize:  pageSize,
 		pageToken: pageToken,
 		order:     order,
 		filters:   filters,
 	}
 }
 
-func (c Criteria) Limit() uint16 {
-	return c.limit
+func (c Criteria) PageSize() PageSize {
+	return c.pageSize
 }
 
-func (c Criteria) PageToken() string {
+func (c Criteria) PageToken() PageToken {
 	return c.pageToken
 }
 
@@ -37,4 +37,8 @@ func (c Criteria) Filters() Filters {
 
 func (c Criteria) HasFilters() bool {
 	return len(c.filters.Values()) > 1
+}
+
+func (c Criteria) HasPageToken() bool {
+	return c.pageToken.Value() != ""
 }

@@ -21,7 +21,7 @@ func NewFindQueryHandler(finder *Finder) *FindQueryHandler {
 func (h FindQueryHandler) Invoke(ctx context.Context, q domain.Query) (interface{}, error) {
 	query, ok := q.(FindQuery)
 	if !ok {
-		return nil, ddderr.NewInvalidFormat("query", "find query")
+		return nil, ddderr.NewInvalidFormat("query", q.Id())
 	}
 
 	movieId, err := movie.NewMovieId(query.MovieId)
