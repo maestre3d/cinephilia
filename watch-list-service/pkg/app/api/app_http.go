@@ -22,12 +22,9 @@ import (
 	"go.uber.org/fx"
 )
 
-var httpApp *fiber.App
-
-func InitHTTP(ctx context.Context) *fx.App {
+func InitHTTP(_ context.Context) *fx.App {
 	return fx.New(
 		fx.Provide(
-			newRouter,
 			persistence.NewPostgresPool,
 			func(pool *sql.DB) movie.Repository {
 				return movpersistence.NewPostgresMovieRepository(pool)
@@ -48,6 +45,8 @@ func InitHTTP(ctx context.Context) *fx.App {
 			movieapp.NewCreateByCrawlCommandHandler,
 			movieapp.NewFinder,
 			movieapp.NewFindQueryHandler,
+			newHTTP,
+			newHTTPRouter,
 		),
 		fx.Invoke(
 			func(commandBus domain.CommandBus, createCrawl *movieapp.CreateByCrawlCommandHandler,
@@ -64,15 +63,16 @@ func InitHTTP(ctx context.Context) *fx.App {
 				err := queryBus.RegisterHandler(movieapp.FindQuery{}, find)
 				return queryBus, err
 			},
+			controller.NewHealthCheckHTTP,
 			controller.NewMovieHTTP,
-			func() error {
-				return httpApp.Listen(":8081")
+			func(app *fiber.App) error {
+				return app.Listen(":8080")
 			},
 		),
 	)
 }
 
-func newRouter(lc fx.Lifecycle) fiber.Router {
+func newHTTP(lc fx.Lifecycle) *fiber.App {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.ErrorHandlerHTTP,
 	})
@@ -87,17 +87,19 @@ func newRouter(lc fx.Lifecycle) fiber.Router {
 		_ = c.SendString("Welcome to Watch List API")
 		return nil
 	})
-	api := app.Group("/v1")
-	httpApp = app
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			return httpApp.Shutdown()
+			return app.Shutdown()
 		},
 	})
 
-	return api
+	return app
+}
+
+func newHTTPRouter(app *fiber.App) fiber.Router {
+	return app.Group("/v1")
 }
