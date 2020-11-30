@@ -1,0 +1,11 @@
+cinephilia:
+  service: watch_list
+  stage: dev
+  version: 0.1.0-beta
+postgresql:
+  address: localhost
+  database: watch_list
+  password: postgres
+  port: 5432
+  secure_mode: false
+  user: postgres

@@ -11,6 +11,8 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/matoous/go-nanoid v1.5.0
 	github.com/neutrinocorp/ddderr v0.0.0-20201109075247-2521e3e57725
+	github.com/spf13/viper v1.7.1
 	go.uber.org/fx v1.13.1
 	go.uber.org/multierr v1.5.0 // indirect
+	go.uber.org/zap v1.16.0
 )

@@ -2,20 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
+	"time"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/pkg/app/api"
 )
 
 func main() {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+	defer cancel()
 	httpApi := api.InitHTTP(ctx)
-	err := httpApi.Start(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	select {
-	case <-ctx.Done():
-	}
+	httpApi.Run()
 }

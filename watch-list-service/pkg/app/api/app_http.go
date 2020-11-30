@@ -3,6 +3,18 @@ package api
 import (
 	"context"
 	"database/sql"
+	"time"
+
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/bus/commandbus"
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/bus/querybus"
+
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/configuration"
+
+	"go.uber.org/zap"
+
+	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/logging"
+
+	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -12,7 +24,6 @@ import (
 	movieapp "github.com/maestre3d/cinephilia/watch-list-service/internal/application/tracker/movie"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain/tracker/movie"
-	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/bus"
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/persistence"
 	movieinfra "github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie"
 	movpersistence "github.com/maestre3d/cinephilia/watch-list-service/internal/infrastructure/tracker/movie/persistence"
@@ -25,57 +36,52 @@ import (
 func InitHTTP(_ context.Context) *fx.App {
 	return fx.New(
 		fx.Provide(
+			configuration.NewConfiguration,
+			logging.NewZapPrimitive,
 			persistence.NewPostgresPool,
 			func(pool *sql.DB) movie.Repository {
 				return movpersistence.NewPostgresMovieRepository(pool)
 			},
-			func(repository movie.Repository) domain.CommandBus {
-				return bus.NewInMemorySyncCommand()
+			func(log *zap.Logger) domain.CommandBus {
+				return commandbus.NewCommandBus(commandbus.NewInMemorySyncCommand(), log)
 			},
-			func() domain.QueryBus {
-				return bus.NewInMemorySyncQuery()
+			func(log *zap.Logger) domain.QueryBus {
+				return querybus.NewQueryBus(querybus.NewInMemorySyncQuery(), log)
 			},
 			movieapp.NewCreator,
-			movieapp.NewCreateCommandHandler,
 			webscrap.NewCollyImdbCollector,
 			movieinfra.NewImdbWebScrapper,
 			func(scrapper *movieinfra.ImdbWebScrapper) movie.MovieCrawler {
 				return movieinfra.NewImdbMovieCrawler(scrapper)
 			},
-			movieapp.NewCreateByCrawlCommandHandler,
 			movieapp.NewFinder,
-			movieapp.NewFindQueryHandler,
-			newHTTP,
+			newHTTPApp,
 			newHTTPRouter,
 		),
 		fx.Invoke(
-			func(commandBus domain.CommandBus, createCrawl *movieapp.CreateByCrawlCommandHandler,
-				create *movieapp.CreateCommandHandler) error {
-				err := commandBus.RegisterHandler(movieapp.CreateByCrawlCommand{},
-					createCrawl)
-				if err != nil {
-					return err
-				}
-
-				return commandBus.RegisterHandler(movieapp.CreateCommand{}, create)
-			},
-			func(queryBus domain.QueryBus, find *movieapp.FindQueryHandler) (domain.QueryBus, error) {
-				err := queryBus.RegisterHandler(movieapp.FindQuery{}, find)
-				return queryBus, err
-			},
+			movieapp.NewCreateCommandHandler,
+			movieapp.NewCreateByCrawlCommandHandler,
+			movieapp.NewFindQueryHandler,
 			controller.NewHealthCheckHTTP,
 			controller.NewMovieHTTP,
-			func(app *fiber.App) error {
-				return app.Listen(":8080")
+			func(log *zap.Logger, cfg configuration.Configuration) {
+				log.Info("starting http application", zap.Namespace("config"),
+					zap.String("service", cfg.Service),
+					zap.String("stage", cfg.Stage),
+					zap.String("version", cfg.Version),
+				)
 			},
+			startHTTP,
 		),
 	)
 }
 
-func newHTTP(lc fx.Lifecycle) *fiber.App {
+func newHTTPApp() *fiber.App {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.ErrorHandlerHTTP,
+		ReadTimeout:  time.Second * 5,
 	})
+	app.Use(logger.New())
 	app.Use(etag.New())
 	app.Use(cors.New())
 	app.Use(compress.New())
@@ -84,17 +90,7 @@ func newHTTP(lc fx.Lifecycle) *fiber.App {
 	app.Use(recover.New())
 	app.Use(middleware.ErrorHTTP)
 	app.Get("/", func(c *fiber.Ctx) error {
-		_ = c.SendString("Welcome to Watch List API")
-		return nil
-	})
-
-	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
-			return nil
-		},
-		OnStop: func(ctx context.Context) error {
-			return app.Shutdown()
-		},
+		return c.SendString("Welcome to Watch List API")
 	})
 
 	return app
@@ -102,4 +98,18 @@ func newHTTP(lc fx.Lifecycle) *fiber.App {
 
 func newHTTPRouter(app *fiber.App) fiber.Router {
 	return app.Group("/v1")
+}
+
+func startHTTP(lc fx.Lifecycle, app *fiber.App) {
+	lc.Append(fx.Hook{
+		OnStart: func(context.Context) (err error) {
+			go func() {
+				err = app.Listen(":8080")
+			}()
+			return err
+		},
+		OnStop: func(ctx context.Context) error {
+			return app.Shutdown()
+		},
+	})
 }

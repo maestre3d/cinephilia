@@ -16,8 +16,13 @@ type CreateCommandHandler struct {
 	creator *Creator
 }
 
-func NewCreateCommandHandler(creator *Creator) *CreateCommandHandler {
-	return &CreateCommandHandler{creator: creator}
+func NewCreateCommandHandler(bus domain.CommandBus, creator *Creator) (*CreateCommandHandler, error) {
+	h := &CreateCommandHandler{creator: creator}
+	if err := bus.RegisterHandler(CreateCommand{}, h); err != nil {
+		return nil, err
+	}
+
+	return h, nil
 }
 
 func (h CreateCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {

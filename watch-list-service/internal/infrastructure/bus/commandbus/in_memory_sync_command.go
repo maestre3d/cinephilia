@@ -1,10 +1,10 @@
-package bus
+package commandbus
 
 import (
 	"context"
+	"errors"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
-	"github.com/neutrinocorp/ddderr"
 )
 
 //	@Adapter
@@ -20,7 +20,7 @@ func NewInMemorySyncCommand() *InMemorySyncCommand {
 
 func (c *InMemorySyncCommand) RegisterHandler(command domain.Command, handler domain.CommandHandler) error {
 	if _, ok := c.handlerMap[command.Id()]; ok {
-		return ddderr.NewAlreadyExists(nil, "command")
+		return errors.New("command already exists")
 	}
 
 	c.handlerMap[command.Id()] = handler
@@ -29,7 +29,7 @@ func (c *InMemorySyncCommand) RegisterHandler(command domain.Command, handler do
 
 func (c InMemorySyncCommand) Dispatch(ctx context.Context, command domain.Command) error {
 	if _, ok := c.handlerMap[command.Id()]; !ok {
-		return ddderr.NewNotFound(nil, "command")
+		return errors.New("command does not exists")
 	}
 
 	return c.handlerMap[command.Id()].Invoke(ctx, command)

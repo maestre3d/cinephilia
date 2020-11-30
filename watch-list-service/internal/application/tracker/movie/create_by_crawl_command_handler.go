@@ -17,8 +17,12 @@ type CreateByCrawlCommandHandler struct {
 	crawler movie.MovieCrawler
 }
 
-func NewCreateByCrawlCommandHandler(creator *Creator, crawler movie.MovieCrawler) *CreateByCrawlCommandHandler {
-	return &CreateByCrawlCommandHandler{creator: creator, crawler: crawler}
+func NewCreateByCrawlCommandHandler(bus domain.CommandBus, creator *Creator, crawler movie.MovieCrawler) (*CreateByCrawlCommandHandler, error) {
+	h := &CreateByCrawlCommandHandler{creator: creator, crawler: crawler}
+	if err := bus.RegisterHandler(CreateByCrawlCommand{}, h); err != nil {
+		return nil, err
+	}
+	return h, nil
 }
 
 func (h CreateByCrawlCommandHandler) Invoke(ctx context.Context, cmd domain.Command) error {

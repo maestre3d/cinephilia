@@ -14,8 +14,13 @@ type FindQueryHandler struct {
 	finder *Finder
 }
 
-func NewFindQueryHandler(finder *Finder) *FindQueryHandler {
-	return &FindQueryHandler{finder: finder}
+func NewFindQueryHandler(bus domain.QueryBus, finder *Finder) (*FindQueryHandler, error) {
+	h := &FindQueryHandler{finder: finder}
+	if err := bus.RegisterHandler(FindQuery{}, h); err != nil {
+		return nil, err
+	}
+
+	return h, nil
 }
 
 func (h FindQueryHandler) Invoke(ctx context.Context, q domain.Query) (interface{}, error) {

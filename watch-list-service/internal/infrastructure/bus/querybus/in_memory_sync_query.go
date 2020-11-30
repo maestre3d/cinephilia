@@ -1,14 +1,15 @@
-package bus
+package querybus
 
 import (
 	"context"
-
-	"github.com/neutrinocorp/ddderr"
+	"errors"
+	"sync"
 
 	"github.com/maestre3d/cinephilia/watch-list-service/internal/domain"
 )
 
 type InMemorySyncQuery struct {
+	mu         sync.Mutex
 	handlerMap map[string]domain.QueryHandler
 }
 
@@ -17,17 +18,19 @@ func NewInMemorySyncQuery() *InMemorySyncQuery {
 }
 
 func (q *InMemorySyncQuery) RegisterHandler(query domain.Query, handler domain.QueryHandler) error {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	if _, ok := q.handlerMap[query.Id()]; ok {
-		return ddderr.NewAlreadyExists(nil, "query")
+		return errors.New("query already exists")
 	}
 
 	q.handlerMap[query.Id()] = handler
 	return nil
 }
 
-func (q InMemorySyncQuery) Ask(ctx context.Context, query domain.Query) (interface{}, error) {
+func (q *InMemorySyncQuery) Ask(ctx context.Context, query domain.Query) (interface{}, error) {
 	if _, ok := q.handlerMap[query.Id()]; !ok {
-		return nil, ddderr.NewNotFound(nil, "query")
+		return nil, errors.New("query does not exists")
 	}
 
 	return q.handlerMap[query.Id()].Invoke(ctx, query)
